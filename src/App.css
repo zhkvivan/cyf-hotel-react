@@ -48,6 +48,14 @@ tr {
   color: #5b5757;
 }
 
+.selectedRow {
+  background-color: rgb(201, 223, 255);
+}
+
+.unSelectedRow {
+  background-color: none;
+}
+
 .results {
   padding-top: 15px;
 }
