@@ -3,7 +3,7 @@ import Card from "./Card";
 
 const TouristInfoCards = () => {
   return (
-    <div className="card-group container">
+    <div className="card-group container d-flex justify-content-around">
       <Card
         city="Glasgow"
         imgUrl="https://www.sesam-web.org/media/gallery/meetings_glasgow-city.jpg"

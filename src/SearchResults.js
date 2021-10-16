@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import moment from "moment";
 
-const SearchResults = props => {
-  const [isSelected, setSelecting] = useState(false);
+const SearchResults = ({ searchResults }) => {
+  const [rowBackgrounds, setRowBackgrounds] = useState([]);
 
-  const highlightRow = () => {
-    setSelecting(prev => !prev);
+  const highlightRow = index => {
+    setRowBackgrounds(arr => {
+      arr[index] = !arr[index];
+      return [...arr];
+    });
   };
 
   return (
@@ -23,18 +26,23 @@ const SearchResults = props => {
         </tr>
       </thead>
       <tbody>
-        {props.results.map((person, index) => {
+        {searchResults.map((person, index) => {
           let values = Object.values(person);
           values.shift();
 
           let dateIn = moment(values[5]);
           let dateOut = moment(values[6]);
           let numberOfDays = dateOut.diff(dateIn, "days");
+
           return (
             <tr
               key={index}
-              onClick={highlightRow}
-              // className={isSelected ? 'selectedRow' : 'unSelectedRow'}
+              onClick={() => {
+                highlightRow(index);
+              }}
+              className={
+                rowBackgrounds[index] ? "selectedRow" : "unSelectedRow"
+              }
             >
               {values.map((item, index) => {
                 return <td key={index}>{item}</td>;
