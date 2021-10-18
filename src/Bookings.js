@@ -26,16 +26,22 @@ const Bookings = () => {
   const [isError, setError] = useState(false);
 
   useEffect(() => {
+    let error = false;
     fetch(`https://cyf-react.glitch.me/error`)
-      .then(res => res.json())
-      .then(data => {
-        setInitialBookings(data);
-        setBookings(data);
-        setIsStillLoading(false);
+      .then(res => {
+        if (!res.ok) {
+          error = true;
+          setError(true);
+          setIsStillLoading(false);
+        }
+        return res.json();
       })
-      .catch(error => {
-        console.log("error", error);
-        setError(true);
+      .then(data => {
+        if (!error) {
+          setInitialBookings(data);
+          setBookings(data);
+          setIsStillLoading(false);
+        }
       });
   }, []);
 
@@ -43,17 +49,11 @@ const Bookings = () => {
     <div className="App-content">
       <div className="container">
         <Search search={search} />
-        {/* {bookings.length === 0 ? (
-					'Loading...'
-				) : (
-					<SearchResults searchResults={bookings} />
-				)} */}
-        {isError ? "error" : "no error"}
-        {/* {isStillLoading ? (
-					'Loading...'
-				) : (
-					<SearchResults searchResults={bookings} />
-				)} */}
+        {isError && "Loading error"}
+        {isStillLoading ? "Loading" : ""}
+        {!isError && !isStillLoading && (
+          <SearchResults searchResults={bookings} />
+        )}
       </div>
     </div>
   );
