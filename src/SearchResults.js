@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import moment from "moment";
 import CustomerProfile from "./CustomerProfile";
 
-const SearchResults = ({ searchResults }) => {
+const SearchResults = ({ searchResults, sortBy }) => {
   const [rowBackgrounds, setRowBackgrounds] = useState([]);
 
   const highlightRow = index => {
@@ -18,19 +18,50 @@ const SearchResults = ({ searchResults }) => {
     setUserId(id);
   };
 
+  searchResults = searchResults.map(obj => {
+    let dateIn = moment(obj.checkInDate);
+    let dateOut = moment(obj.checkOutDate);
+    let numberOfNights = dateOut.diff(dateIn, "days");
+    obj.numberOfNights = numberOfNights;
+    console.log(obj);
+    return obj;
+  });
+
+  // Sort
+
+  function sortTable(e) {
+    sortBy(e);
+  }
+
   return (
     <div>
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">Title</th>
-            <th scope="col">First name</th>
-            <th scope="col">Surname</th>
-            <th scope="col">Email</th>
-            <th scope="col">Room ID</th>
-            <th scope="col">Check in date</th>
-            <th scope="col">Check out date</th>
-            <th scope="col">Number of nights</th>
+            <th scope="col" name="title" onClick={sortTable}>
+              Title
+            </th>
+            <th scope="col" name="firstName" onClick={sortTable}>
+              First name
+            </th>
+            <th scope="col" name="surname" onClick={sortTable}>
+              Surname
+            </th>
+            <th scope="col" name="email" onClick={sortTable}>
+              Email
+            </th>
+            <th scope="col" name="roomId" onClick={sortTable}>
+              Room ID
+            </th>
+            <th scope="col" name="checkInDate" onClick={sortTable}>
+              Check in date
+            </th>
+            <th scope="col" name="checkOutDate" onClick={sortTable}>
+              Check out date
+            </th>
+            <th scope="col" name="numberOfNights" onClick={sortTable}>
+              Number of nights
+            </th>
             <th scope="col">Show profile</th>
           </tr>
         </thead>
@@ -38,10 +69,6 @@ const SearchResults = ({ searchResults }) => {
           {searchResults.map((person, index) => {
             let values = Object.values(person);
             values.shift();
-
-            let dateIn = moment(values[5]);
-            let dateOut = moment(values[6]);
-            let numberOfDays = dateOut.diff(dateIn, "days");
 
             return (
               <tr
@@ -56,7 +83,6 @@ const SearchResults = ({ searchResults }) => {
                 {values.map((item, index) => {
                   return <td key={index}>{item}</td>;
                 })}
-                <td>{numberOfDays}</td>
                 <td>
                   <button
                     className="btn btn-primary"
