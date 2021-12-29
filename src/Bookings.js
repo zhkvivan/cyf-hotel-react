@@ -26,9 +26,12 @@ const Bookings = () => {
   const [isStillLoading, setIsStillLoading] = useState(true);
   const [isError, setError] = useState(false);
 
+  // const SERVER = `https://cyf-react.glitch.me/`;
+  const SERVER = "http://localhost:3001";
+
   useEffect(() => {
     let error = false;
-    fetch(`https://cyf-react.glitch.me/`)
+    fetch(`${SERVER}/bookings`)
       .then(res => {
         if (!res.ok) {
           error = true;
@@ -48,11 +51,26 @@ const Bookings = () => {
 
   // Getting new booking from the adding form
   function addNewBooking(newBooking) {
-    console.log(newBooking);
-    let newArray = [...bookings];
-    newArray.push(newBooking);
-    console.log(newArray);
-    setBookings(newArray);
+    // console.log(newBooking);
+    // let newArray = [...bookings];
+    // newArray.push(newBooking);
+    // console.log(newArray);
+    // setBookings(newArray);
+    fetch(`${SERVER}/bookings`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(newBooking)
+    })
+      .then(res => res.json())
+      .then(res => {
+        newBooking.id = res;
+        setBookings(prev => {
+          let next = [...prev, newBooking];
+          return next;
+        });
+      });
   }
 
   function sortBy(e) {
